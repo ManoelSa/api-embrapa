@@ -4,3 +4,4 @@ html5lib==1.1
 pandas==2.2.3
 uvicorn==0.34.0
 fastapi==0.115.12
+pytest==8.3.5
