@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from router import embrapa
+from app.router import embrapa
 import sys
 import os
 
