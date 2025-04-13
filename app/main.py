@@ -1,5 +1,9 @@
 from fastapi import FastAPI
 from router import embrapa
+import sys
+import os
+
+sys.path.append(os.path.abspath(os.path.dirname(__file__)))
 
 app = FastAPI(
     title="API Embrapa",
