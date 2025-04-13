@@ -5,16 +5,19 @@ from schemas.schemas import SubProcessamento, SubImportacao, SubExportacao
 
 router = APIRouter()
 
+@router.get("/")
+async def home():
+    return "Bem Vindo a API Embrapa!"
 
 @router.get('/embrapa-producao/{ano}',status_code=HTTPStatus.OK)
-def get_poducao(ano:int):
+async def get_poducao(ano:int):
     url = f'http://vitibrasil.cnpuv.embrapa.br/index.php?opcao=opt_02&ano={ano}'
     data = get_data(url)    
     return data
 
 
 @router.get('/embrapa-processamento/',status_code=HTTPStatus.OK)
-def get_processamento(itens:SubProcessamento = Depends()):
+async def get_processamento(itens:SubProcessamento = Depends()):
     mapping = {
             "viniferas": "subopt_01",
             "americanas_hibrida": "subopt_02",
@@ -28,13 +31,13 @@ def get_processamento(itens:SubProcessamento = Depends()):
     return data
 
 @router.get('/embrapa-comercializacao/{ano}',status_code=HTTPStatus.OK)
-def get_comercializacao(ano:int):
+async def get_comercializacao(ano:int):
     url = f'http://vitibrasil.cnpuv.embrapa.br/index.php?opcao=opt_04&ano={ano}'
     data = get_data(url)    
     return data
 
 @router.get('/embrapa-importacao/',status_code=HTTPStatus.OK)
-def get_importacao(itens:SubImportacao = Depends()):
+async def get_importacao(itens:SubImportacao = Depends()):
     mapping = {
             "vinhos_mesa": "subopt_01",
             "espumantes": "subopt_02",
@@ -50,7 +53,7 @@ def get_importacao(itens:SubImportacao = Depends()):
 
 
 @router.get('/embrapa-exportacao/',status_code=HTTPStatus.OK)
-def get_exportacao(itens:SubExportacao = Depends()):
+async def get_exportacao(itens:SubExportacao = Depends()):
     mapping = {
             "vinhos_mesa": "subopt_01",
             "espumantes": "subopt_02",
