@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from http import HTTPStatus
-from utils.utils import get_data
-from schemas.schemas import SubProcessamento, SubImportacao, SubExportacao
+from app.utils.utils import get_data
+from app.schemas.schemas import SubProcessamento, SubImportacao, SubExportacao
 
 router = APIRouter()
 
