@@ -2,15 +2,19 @@ from fastapi import APIRouter, Depends
 from http import HTTPStatus
 from app.utils.utils import get_data
 from app.schemas.schemas import SubProcessamento, SubImportacao, SubExportacao
+from app.config.security import verify_token
+from fastapi.security import OAuth2PasswordBearer
 
 router = APIRouter()
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
 @router.get("/")
 async def home():
     return "Bem Vindo a API Embrapa!"
 
 @router.get('/embrapa-producao/{ano}',status_code=HTTPStatus.OK)
-async def get_poducao(ano:int):
+async def get_poducao(ano:int, token: str = Depends(oauth2_scheme)):
     url = f'http://vitibrasil.cnpuv.embrapa.br/index.php?opcao=opt_02&ano={ano}'
     data = get_data(url)    
     return data

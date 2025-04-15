@@ -1,8 +1,9 @@
 import requests
-from io import StringIO
 import pandas as pd
+from io import StringIO
 from bs4 import BeautifulSoup as bs
 
+#Função generica de busca no site EMBRAPA
 def get_data(url:str):
     response = requests.get(url)
     html = response.text
