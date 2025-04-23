@@ -39,7 +39,7 @@ Através da API, os dados são disponibilizados em formato JSON, facilitando seu
   - `GET /embrapa-processamento` — Informações sobre quantidade de uvas processadas no Rio Grande do Sul.  
   - `GET /embrapa-comercializacao` — Dados de comercialização de vinhos e derivados no Rio Grande do Sul.  
   - `GET /embrapa-importacao` — Dados sobre importação de derivados de uva.  
-  - `GET /embrapa-exportacao` — Dados de exportação de derivados de uva  
+  - `GET /embrapa-exportacao` — Dados de exportação de derivados de uva.  
 - **Formato de resposta:** JSON  
 - **Hospedagem:** A API está disponível publicamente via [Vercel](https://vercel.com/) para fins de estudo e experimentação. 
 - **Foco geográfico:** Estado do **Rio Grande do Sul**, conforme dados da fonte

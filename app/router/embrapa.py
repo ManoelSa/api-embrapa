@@ -3,25 +3,46 @@ from http import HTTPStatus
 from app.utils.utils import get_data
 from app.schemas.schemas import SubProcessamento, SubImportacao, SubExportacao
 from app.config.security import verify_token
-from fastapi.security import OAuth2PasswordBearer
 
 router = APIRouter()
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
-
 @router.get("/")
 async def home():
+    """
+    Página de boas vindas.
+
+    """
     return "Bem Vindo a API Embrapa!"
 
 @router.get('/embrapa-producao/{ano}',status_code=HTTPStatus.OK)
-async def get_poducao(ano:int, token: str = Depends(oauth2_scheme)):
+async def get_poducao(ano:int, token: str = Depends(verify_token)):
+    """
+    Retorna dados da produção de vinhos, sucos e derivados do Rio Grande do Sul.
+
+    Args:
+        ano (int): Ano a ser consultado.
+        token (str): Token JWT para autenticação, obtido via login. Fornecido automaticamente via Depends.
+
+    Returns:
+        list[dict]: Retorna os dados processados ou uma mensagem informando `Sem dados para o Ano solicitado`.
+    """
     url = f'http://vitibrasil.cnpuv.embrapa.br/index.php?opcao=opt_02&ano={ano}'
     data = get_data(url)    
     return data
 
 
 @router.get('/embrapa-processamento/',status_code=HTTPStatus.OK)
-async def get_processamento(itens:SubProcessamento = Depends()):
+async def get_processamento(itens:SubProcessamento = Depends(), token: str = Depends(verify_token)):
+    """
+    Retorna informações sobre quantidade de uvas processadas no Rio Grande do Sul.
+
+    Args:
+        itens (SubProcessamento): Objeto com o tipo de item ('choice') e o ano da consulta.
+        token (str): Token JWT para autenticação, obtido via login. Fornecido automaticamente via Depends.
+
+    Returns:
+        list[dict]: Retorna os dados processados ou uma mensagem informando `Sem dados para o Ano solicitado`.
+    """
     mapping = {
             "viniferas": "subopt_01",
             "americanas_hibrida": "subopt_02",
@@ -35,13 +56,33 @@ async def get_processamento(itens:SubProcessamento = Depends()):
     return data
 
 @router.get('/embrapa-comercializacao/{ano}',status_code=HTTPStatus.OK)
-async def get_comercializacao(ano:int):
+async def get_comercializacao(ano:int, token: str = Depends(verify_token)):
+    """
+    Retorna dados de comercialização de vinhos e derivados no Rio Grande do Sul.
+
+    Args:
+        ano (int): Ano a ser consultado.
+        token (str): Token JWT para autenticação, obtido via login. Fornecido automaticamente via Depends.
+
+    Returns:
+        list[dict]: Retorna os dados processados ou uma mensagem informando `Sem dados para o Ano solicitado`.
+    """
     url = f'http://vitibrasil.cnpuv.embrapa.br/index.php?opcao=opt_04&ano={ano}'
     data = get_data(url)    
     return data
 
 @router.get('/embrapa-importacao/',status_code=HTTPStatus.OK)
-async def get_importacao(itens:SubImportacao = Depends()):
+async def get_importacao(itens:SubImportacao = Depends(), token: str = Depends(verify_token)):
+    """
+    Retorna dados sobre importação de derivados de uva.
+
+    Args:
+        itens (SubImportacao): Objeto com o tipo de item ('choice') e o ano da consulta.
+        token (str): Token JWT para autenticação, obtido via login. Fornecido automaticamente via Depends.
+
+    Returns:
+        list[dict]: Retorna os dados processados ou uma mensagem informando `Sem dados para o Ano solicitado`.
+    """
     mapping = {
             "vinhos_mesa": "subopt_01",
             "espumantes": "subopt_02",
@@ -57,7 +98,17 @@ async def get_importacao(itens:SubImportacao = Depends()):
 
 
 @router.get('/embrapa-exportacao/',status_code=HTTPStatus.OK)
-async def get_exportacao(itens:SubExportacao = Depends()):
+async def get_exportacao(itens:SubExportacao = Depends(), token: str = Depends(verify_token)):
+    """
+    Retorna dados de exportação de derivados de uva.
+
+    Args:
+        itens (SubExportacao): Objeto com o tipo de item ('choice') e o ano da consulta.
+        token (str): Token JWT para autenticação, obtido via login. Fornecido automaticamente via Depends.
+
+    Returns:
+        list[dict]: Retorna os dados processados ou uma mensagem informando `Sem dados para o Ano solicitado`.
+    """
     mapping = {
             "vinhos_mesa": "subopt_01",
             "espumantes": "subopt_02",
