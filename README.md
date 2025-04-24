@@ -44,6 +44,87 @@ Através da API, os dados são disponibilizados em formato JSON, facilitando seu
 - **Hospedagem:** A API está disponível publicamente via [Vercel](https://vercel.com/) para fins de estudo e experimentação. 
 - **Foco geográfico:** Estado do **Rio Grande do Sul**, conforme dados da fonte
 
+## Fluxo de Autenticação e Acesso
+
+```text
+[Usuário] --(username/password)--> /login 
+          <-- access_token
+
+[Usuário] --(Authorization: Bearer <token>)--> /<rota>
+              |
+              v
+     [verify_token] valida o token
+              |
+              v
+     [endpoint] executa scraping e retorna dados em JSON
+
+```
+## Exemplos de uso Localmente 
+
+```bash
+# 1. Clone o repositório
+git clone https://github.com/ManoelSa/api-embrapa.git
+cd seu-repositorio
+
+# 2. (Opcional) Crie e ative um ambiente virtual
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+
+# 3. Instale as dependências
+pip install -r requirements.txt
+
+# 4. Configure as variáveis de ambiente (exemplo em .env criado na raiz do projeto)
+APP_USER='<seu_usuario>'
+APP_PASS='<sua_senha>'
+SECRET_KEY='<sua_key>'
+ALGORITHM='HS256'
+ACCESS_TOKEN_EXPIRE_MINUTES=15
+
+# 5. Execute o servidor FastAPI
+uvicorn main:app --reload
+```
+## Possível erro ao Iniciar o Seridor Local 
+```python
+# Em caso de erros ao inciar o servidor, altere os imports
+# main.py
+# DE:
+from app.router import embrapa
+from app.config import security
+
+# PARA:
+from router import embrapa
+from config import security
+
+# embrapa.py
+# DE:
+from app.utils.utils import get_data
+from app.schemas.schemas import SubProcessamento, SubImportacao, SubExportacao
+from app.config.security import verify_token
+
+# PARA:
+from utils.utils import get_data
+from schemas.schemas import SubProcessamento, SubImportacao, SubExportacao
+from config.security import verify_token
+
+```
+## Documentação e Testes
+
+### Documentação Local
+
+Após iniciar o servidor localmente, você pode acessar a documentação interativa da API:
+
+- **API Local**: [http://127.0.0.1:8000](http://127.0.0.1:8000)
+- **Documentação Swagger**: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+- **Documentação Redoc (alternativa)**: [http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc)
+
+### Documentação Online
+
+Se preferir acessar a API e a documentação diretamente na versão hospedada, acesse:
+
+- **API Online**: [https://api-embrapa-gamma.vercel.app](https://api-embrapa-gamma.vercel.app)
+- **Documentação Swagger**: [https://api-embrapa-gamma.vercel.app/docs](https://api-embrapa-gamma.vercel.app/docs)
+- **Documentação Redoc (alternativa)**: [https://api-embrapa-gamma.vercel.app/redoc](https://api-embrapa-gamma.vercel.app/redoc)
+
 ## Exemplos de chamadas à API com Python 
 🔐 1. Obter Token de Autenticação (Login):
 
@@ -68,7 +149,7 @@ print("Token JWT:", token)
 ```python
 import requests
 
-url_get = 'https://api-embrapa-gamma.vercel.app/embrapa-producao/2021'
+url_get = 'https://api-embrapa-gamma.vercel.app/embrapa-producao/{ano}'
 
 headers = {
     "Authorization": f"Bearer {token}"
