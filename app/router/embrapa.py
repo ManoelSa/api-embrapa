@@ -1,9 +1,10 @@
 from fastapi import APIRouter, Depends, Path
 from http import HTTPStatus
-from app.utils.utils import get_data
+from app.utils.utils import get_data, get_data_fallback
 from app.schemas.schemas import SubProcessamento, SubImportacao, SubExportacao
 from app.config.security import verify_token
 from datetime import datetime
+import logging
 
 router = APIRouter()
 
@@ -28,8 +29,17 @@ async def get_poducao(ano:int = Path(..., ge=1900, le=datetime.now().year), toke
         list[dict]: Retorna os dados processados ou uma mensagem informando `Sem dados para o Ano solicitado`.
     """
     url = f'http://vitibrasil.cnpuv.embrapa.br/index.php?opcao=opt_02&ano={ano}'
-    data = get_data(url)    
-    return data
+    try:
+        data = get_data(url)
+        logging.warning("Rota Online")     
+        return data
+    except:
+        path = '.\\files\\Producao.csv'
+        columns=['produto','Quantidade (L.)']
+        delimiter = ';'
+        data = get_data_fallback(path=path, filtro=ano, columns=columns, delimiter=delimiter)
+        logging.warning(f"Rota Alternativa: {path}")   
+        return data
 
 
 @router.get('/embrapa-processamento/',status_code=HTTPStatus.OK)

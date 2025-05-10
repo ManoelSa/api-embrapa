@@ -90,10 +90,12 @@ uvicorn main:app --reload
 # DE:
 from app.router import embrapa
 from app.config import security
+from app.handlers.validation import validation_handler
 
 # PARA:
 from router import embrapa
 from config import security
+from handlers.validation import validation_handler
 
 # embrapa.py
 # DE:

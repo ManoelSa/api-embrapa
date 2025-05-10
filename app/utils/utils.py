@@ -4,7 +4,7 @@ from io import StringIO
 from bs4 import BeautifulSoup as bs
 
 #Função generica de busca no site EMBRAPA
-def get_data(url:str):
+def get_data(url:str) -> list[dict]:
     """
     Realiza o scraping de uma tabela HTML a partir de uma URL e retorna os dados em formato de lista de dicionários.
     Args:
@@ -32,8 +32,31 @@ def get_data(url:str):
     valid = [v for k,v in dict[-1].items() if 'total' not in str(v).lower()]
 
     if '0' not in valid:
-        data = df.to_dict(orient="records")
+        data = df[:-1].to_dict(orient="records")
     else:
         data = [{'Response':'Sem dados para o Ano solicitado'}]
 
     return data
+
+#Função generica para uso em Fallback
+def get_data_fallback(path: str, filtro: int , columns: list[str], delimiter: str) -> list[dict]:
+            """
+            Lê um CSV usado de Fallback e retorna dados filtrando colunas que contenham o valor do parâmetro `filtro`.
+            
+            Args:
+                path (str): Caminho do arquivo CSV.
+                filtro (int): Valor usado para filtrar colunas (ex: ano).
+                columns (list[str]): Nomes finais das colunas.
+                delimiter (str): Delimitador do CSV.
+
+            Returns:
+                list[dict]: Dados formatados. Retorna uma mensagem padrão se houver erro.
+            """
+            try:
+                df = pd.read_csv(path, sep=delimiter)
+                select = [columns[0]] + [col for col in df.columns if str(filtro) in col]
+                df = df[select]
+                df.columns = columns
+                return df.to_dict(orient="records")                
+            except:
+               return [{'Response':'Sem dados para o Ano solicitado'}]
