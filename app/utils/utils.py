@@ -1,5 +1,6 @@
 import requests
 import pandas as pd
+import os
 from io import StringIO
 from bs4 import BeautifulSoup as bs
 
@@ -60,3 +61,12 @@ def get_data_fallback(path: str, filtro: int , columns: list[str], delimiter: st
                 return df.to_dict(orient="records")                
             except:
                return [{'Response':'Sem dados para o Ano solicitado'}]
+
+#Define a raiz do projeto, subindo um nível a partir da pasta atual
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+
+def get_file_path(*subpaths) -> str:
+    """
+    Gera caminho absoluto a partir da raiz do projeto.
+    """
+    return os.path.join(BASE_DIR, *subpaths)
