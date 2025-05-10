@@ -1,8 +1,9 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Path
 from http import HTTPStatus
 from app.utils.utils import get_data
 from app.schemas.schemas import SubProcessamento, SubImportacao, SubExportacao
 from app.config.security import verify_token
+from datetime import datetime
 
 router = APIRouter()
 
@@ -15,7 +16,7 @@ async def home():
     return "Bem Vindo a API Embrapa!"
 
 @router.get('/embrapa-producao/{ano}',status_code=HTTPStatus.OK)
-async def get_poducao(ano:int, token: str = Depends(verify_token)):
+async def get_poducao(ano:int = Path(..., ge=1900, le=datetime.now().year), token: str = Depends(verify_token)):
     """
     Retorna dados da produção de vinhos, sucos e derivados do Rio Grande do Sul.
 
@@ -56,7 +57,7 @@ async def get_processamento(itens:SubProcessamento = Depends(), token: str = Dep
     return data
 
 @router.get('/embrapa-comercializacao/{ano}',status_code=HTTPStatus.OK)
-async def get_comercializacao(ano:int, token: str = Depends(verify_token)):
+async def get_comercializacao(ano:int = Path(..., ge=1900, le=datetime.now().year), token: str = Depends(verify_token)):
     """
     Retorna dados de comercialização de vinhos e derivados no Rio Grande do Sul.
 
