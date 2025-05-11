@@ -63,8 +63,17 @@ async def get_processamento(itens:SubProcessamento = Depends(), token: str = Dep
     sub = mapping.get(itens.choice)
 
     url = f'http://vitibrasil.cnpuv.embrapa.br/index.php?subopcao={sub}&opcao=opt_03&ano={itens.ano}'
-    data = get_data(url)    
-    return data
+    try:
+        data = get_data(url)
+        logging.warning("Rota Online")      
+        return data
+    except:
+        path = get_file_path('files', f'{itens.choice}.csv')
+        columns=['cultivar','Quantidade (Kg)']
+        delimiter = '\t' if itens.choice in ('americanas_hibrida','uvas_mesa','sem_classificacao') else ';'
+        data = get_data_fallback(path=path, filtro=itens.ano, columns=columns, delimiter=delimiter)
+        logging.warning(f"Rota Alternativa: {path}")   
+        return data
 
 @router.get('/embrapa-comercializacao/{ano}',status_code=HTTPStatus.OK)
 async def get_comercializacao(ano:int = Path(..., ge=1900, le=datetime.now().year), token: str = Depends(verify_token)):
@@ -113,8 +122,17 @@ async def get_importacao(itens:SubImportacao = Depends(), token: str = Depends(v
     sub = mapping.get(itens.choice)
 
     url = f'http://vitibrasil.cnpuv.embrapa.br/index.php?subopcao={sub}&opcao=opt_05&ano={itens.ano}'
-    data = get_data(url)    
-    return data
+    try:
+        data = get_data(url)
+        logging.warning("Rota Online")       
+        return data
+    except:
+        path = get_file_path('files', f'imp_{itens.choice}.csv')
+        columns=['País','Quantidade (Kg)','Valor (US$)']
+        delimiter = '\t' if itens.choice in ('vinhos_mesa','espumantes','uvas_frescas','uvas_passas') else ';'
+        data = get_data_fallback(path=path, filtro=itens.ano, columns=columns, delimiter=delimiter)
+        logging.warning(f"Rota Alternativa: {path}")   
+        return data
 
 
 @router.get('/embrapa-exportacao/',status_code=HTTPStatus.OK)
@@ -138,5 +156,14 @@ async def get_exportacao(itens:SubExportacao = Depends(), token: str = Depends(v
     sub = mapping.get(itens.choice)
 
     url = f'http://vitibrasil.cnpuv.embrapa.br/index.php?subopcao={sub}&opcao=opt_06&ano={itens.ano}'
-    data = get_data(url)    
-    return data
+    try:
+        data = get_data(url)
+        logging.warning("Rota Online")     
+        return data
+    except:
+        path = get_file_path('files', f'exp_{itens.choice}.csv')
+        columns=['País','Quantidade (Kg)','Valor (US$)']
+        delimiter = '\t'
+        data = get_data_fallback(path=path, filtro=itens.ano, columns=columns, delimiter=delimiter)
+        logging.warning(f"Rota Alternativa: {path}")   
+        return data
