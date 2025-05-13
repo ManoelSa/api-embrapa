@@ -58,6 +58,8 @@ def get_data_fallback(path: str, filtro: int , columns: list[str], delimiter: st
                 select = [columns[0]] + [col for col in df.columns if str(filtro) in col]
                 df = df[select]
                 df.columns = columns
+                df = df.map(lambda x: str(x).replace(',', '.') if isinstance(x, str) else x)
+                df = df.fillna('')
                 return df.to_dict(orient="records")                
             except:
                return [{'Response':'Sem dados para o Ano solicitado'}]
