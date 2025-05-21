@@ -62,7 +62,7 @@ def verify_token(token: str = Depends(oauth2_scheme)):
         raise HTTPException(status_code=HTTPStatus.UNAUTHORIZED, detail="Token inválido")
     
 
-@router.post("/login")
+@router.post("/login", tags=["Autenticação"])
 def login(form_data: OAuth2PasswordRequestForm = Depends()):
     """
     Autentica o usuário com base nas credenciais fornecidas e retorna um token JWT.

@@ -8,7 +8,7 @@ import logging
 
 router = APIRouter()
 
-@router.get("/")
+@router.get("/", tags=["Boas Vindas"])
 async def home():
     """
     Página de boas vindas.
@@ -16,7 +16,7 @@ async def home():
     """
     return "Bem Vindo a API Embrapa!"
 
-@router.get('/embrapa-producao/{ano}',status_code=HTTPStatus.OK)
+@router.get('/embrapa-producao/{ano}', tags=["Embrapa"], status_code=HTTPStatus.OK)
 async def get_poducao(ano:int = Path(..., ge=1900, le=datetime.now().year), token: str = Depends(verify_token)):
     """
     Retorna dados da produção de vinhos, sucos e derivados do Rio Grande do Sul.
@@ -42,7 +42,7 @@ async def get_poducao(ano:int = Path(..., ge=1900, le=datetime.now().year), toke
         return data
 
 
-@router.get('/embrapa-processamento/',status_code=HTTPStatus.OK)
+@router.get('/embrapa-processamento/', tags=["Embrapa"], status_code=HTTPStatus.OK)
 async def get_processamento(itens:SubProcessamento = Depends(), token: str = Depends(verify_token)):
     """
     Retorna informações sobre quantidade de uvas processadas no Rio Grande do Sul.
@@ -75,7 +75,7 @@ async def get_processamento(itens:SubProcessamento = Depends(), token: str = Dep
         logging.warning(f"Rota Alternativa: {path}")   
         return data
 
-@router.get('/embrapa-comercializacao/{ano}',status_code=HTTPStatus.OK)
+@router.get('/embrapa-comercializacao/{ano}', tags=["Embrapa"], status_code=HTTPStatus.OK)
 async def get_comercializacao(ano:int = Path(..., ge=1900, le=datetime.now().year), token: str = Depends(verify_token)):
     """
     Retorna dados de comercialização de vinhos e derivados no Rio Grande do Sul.
@@ -100,7 +100,7 @@ async def get_comercializacao(ano:int = Path(..., ge=1900, le=datetime.now().yea
         logging.warning(f"Rota Alternativa: {path}")   
         return data
 
-@router.get('/embrapa-importacao/',status_code=HTTPStatus.OK)
+@router.get('/embrapa-importacao/', tags=["Embrapa"], status_code=HTTPStatus.OK)
 async def get_importacao(itens:SubImportacao = Depends(), token: str = Depends(verify_token)):
     """
     Retorna dados sobre importação de derivados de uva.
@@ -135,7 +135,7 @@ async def get_importacao(itens:SubImportacao = Depends(), token: str = Depends(v
         return data
 
 
-@router.get('/embrapa-exportacao/',status_code=HTTPStatus.OK)
+@router.get('/embrapa-exportacao/', tags=["Embrapa"], status_code=HTTPStatus.OK)
 async def get_exportacao(itens:SubExportacao = Depends(), token: str = Depends(verify_token)):
     """
     Retorna dados de exportação de derivados de uva.
