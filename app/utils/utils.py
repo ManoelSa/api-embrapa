@@ -2,7 +2,7 @@ import requests
 import pandas as pd
 import os
 from io import StringIO
-from bs4 import BeautifulSoup as bs
+from bs4 import BeautifulSoup
 
 #Função generica de busca no site EMBRAPA
 def get_data(url:str) -> list[dict]:
@@ -19,7 +19,7 @@ def get_data(url:str) -> list[dict]:
     """
     response = requests.get(url)
     html = response.text
-    soup = bs(html,'html.parser')
+    soup = BeautifulSoup(html,'html.parser')
 
     table = soup.find_all('table',class_='tb_base tb_dados')
     if not table:
