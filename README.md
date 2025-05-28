@@ -1,5 +1,8 @@
 # API de Scraping - Vitivinicultura Embrapa
 
+## Diagrama da Arquitetura
+![Diagrama de Arquitetura](diagrama_embrapa.png)
+
 ## Objetivo
 
 Esta API realiza o scraping de informações disponíveis no portal da Embrapa sobre a vitivinicultura no Brasil, com foco especial nos dados do Estado do Rio Grande do Sul — responsável por mais de 90% da produção nacional. Através de endpoints organizados por categoria, a aplicação permite consultar dados estruturados sobre produção, processamento, comercialização, importação e exportação de uvas, vinhos, sucos e derivados.
