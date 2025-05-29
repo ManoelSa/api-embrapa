@@ -1,7 +1,7 @@
 # API de Scraping - Vitivinicultura Embrapa
 
 ## Diagrama da Arquitetura
-![Diagrama de Arquitetura](diagrama_embrapa.png)
+<img src='https://github.com/ManoelSa/api-embrapa/blob/main/diagrama_embrapa.PNG'>
 
 ## Objetivo
 
